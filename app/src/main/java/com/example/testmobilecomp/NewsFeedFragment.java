@@ -46,7 +46,6 @@ public class NewsFeedFragment extends Fragment {
 
         // Fetch news from Firestore
         fetchNews();
-
         return rootView;
     }
 

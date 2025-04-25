@@ -1,5 +1,17 @@
 <resources>
     <string name="app_name">TestMobileComp</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Sort options -->
+    <string-array name="sort_options_entries">
+        <item>Name</item>
+        <item>Volunteer Count</item>
+        <item>Status</item>
+    </string-array>
+
+    <string-array name="sort_options_values">
+        <item>name</item>
+        <item>volunteer_count</item>
+        <item>status</item>
+    </string-array>
 </resources>

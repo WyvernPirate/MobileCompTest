@@ -5,18 +5,18 @@
     <item
         android:id="@+id/action_add_task"
         android:title="Add Task"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/ic_add_tasks"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_refresh"
         android:title="Refresh"
-        android:icon="@android:drawable/ic_menu_rotate"
+        android:icon="@drawable/ic_refresh"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_settings"
         android:title="Settings"
-        android:icon="@android:drawable/ic_menu_preferences"
+        android:icon="@drawable/ic_settings"
         app:showAsAction="never" />
 </menu>

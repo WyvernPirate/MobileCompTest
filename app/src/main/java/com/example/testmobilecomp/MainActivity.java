@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private SharedPreferences sharedPreferences;
     private boolean animateNewsFeed;
@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize SharedPreferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        animateNewsFeed = sharedPreferences.getBoolean("animate_news", true);
-        sortOrder = sharedPreferences.getString("sort_order", "name");
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        loadPreferences();
 
         // Set up bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -76,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void loadPreferences() {
+        animateNewsFeed = sharedPreferences.getBoolean("animate_news", true);
+        sortOrder = sharedPreferences.getString("sort_order", "name");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.options_menu, menu);
@@ -95,19 +100,23 @@ public class MainActivity extends AppCompatActivity {
             startActivity(settingsIntent);
             return true;
         } else if (id == R.id.action_refresh) {
-            // Refresh current fragment
-            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-            if (currentFragment instanceof TaskListFragment) {
-                ((TaskListFragment) currentFragment).fetchTasks();
-                Toast.makeText(this, "Tasks refreshed", Toast.LENGTH_SHORT).show();
-            } else if (currentFragment instanceof NewsFeedFragment) {
-                ((NewsFeedFragment) currentFragment).fetchNews();
-                Toast.makeText(this, "News refreshed", Toast.LENGTH_SHORT).show();
-            }
+            refreshCurrentFragment();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshCurrentFragment() {
+        // Refresh current fragment
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment instanceof TaskListFragment) {
+            ((TaskListFragment) currentFragment).fetchTasks();
+            Toast.makeText(this, "Tasks refreshed", Toast.LENGTH_SHORT).show();
+        } else if (currentFragment instanceof NewsFeedFragment) {
+            ((NewsFeedFragment) currentFragment).fetchNews();
+            Toast.makeText(this, "News refreshed", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addDummyTask() {
@@ -126,6 +135,12 @@ public class MainActivity extends AppCompatActivity {
                     documentReference.update("id", documentReference.getId());
 
                     Toast.makeText(this, "New task added!", Toast.LENGTH_SHORT).show();
+
+                    // Refresh task list if we're on the task list fragment
+                    Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    if (currentFragment instanceof TaskListFragment) {
+                        ((TaskListFragment) currentFragment).fetchTasks();
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error adding task: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -136,5 +151,38 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("animate_news")) {
+            animateNewsFeed = sharedPreferences.getBoolean(key, true);
+
+            // Update the current fragment if it's the news feed
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (currentFragment instanceof NewsFeedFragment) {
+                Bundle args = new Bundle();
+                args.putBoolean("animate_news", animateNewsFeed);
+                currentFragment.setArguments(args);
+                loadFragment(currentFragment);
+            }
+        } else if (key.equals("sort_order")) {
+            sortOrder = sharedPreferences.getString(key, "name");
+
+            // Update the current fragment if it's the task list
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (currentFragment instanceof TaskListFragment) {
+                Bundle args = new Bundle();
+                args.putString("sort_order", sortOrder);
+                currentFragment.setArguments(args);
+                ((TaskListFragment) currentFragment).fetchTasks();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 }
