@@ -5,7 +5,10 @@ public class News {
     private String content;
     private long timestamp;
 
-    // Constructors
+    public News() {
+    }
+
+    // Original constructor
     public News(String id, String content, long timestamp) {
         this.id = id;
         this.content = content;

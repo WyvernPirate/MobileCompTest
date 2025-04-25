@@ -39,6 +39,16 @@
             android:textSize="14sp"
             android:textColor="#757575"/>
 
+        <!-- Status -->
+        <TextView
+            android:id="@+id/textViewStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status: pending"
+            android:textSize="14sp"
+            android:textColor="#009688"
+            android:visibility="gone"/>
+
         <!-- Sign Up Button -->
         <Button
             android:id="@+id/buttonSignUp"

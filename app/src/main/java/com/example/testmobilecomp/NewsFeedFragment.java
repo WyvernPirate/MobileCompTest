@@ -50,7 +50,7 @@ public class NewsFeedFragment extends Fragment {
         return rootView;
     }
 
-    private void fetchNews() {
+    void fetchNews() {
         CollectionReference newsRef = db.collection("news");
         newsRef.get()
                 .addOnCompleteListener(task -> {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="animate_news"
+        android:title="Animate News Feed"
+        android:summary="Enable animations in the news feed"
+        android:defaultValue="true" />
+
+    <ListPreference
+        android:key="sort_order"
+        android:title="Sort Tasks By"
+        android:summary="Select how tasks are sorted"
+        android:defaultValue="name" />
+
+</PreferenceScreen>

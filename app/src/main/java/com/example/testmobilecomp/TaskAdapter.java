@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,29 +41,27 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.organizerTextView.setText(task.getOrganizer());
         holder.volunteerCountTextView.setText("Volunteers: " + task.getVolunteerCount());
 
-        holder.signUpButton.setOnClickListener(v -> {
-            String userName = "User";
-            int n = task.getVolunteerCount();
-            n++;
-            task.setVolunteerCount(n);
-            task.setStatus(userName);
+        // Show status if available
+        if (task.getStatus() != null && !task.getStatus().isEmpty()) {
+            holder.statusTextView.setVisibility(View.VISIBLE);
+            holder.statusTextView.setText("Status: " + task.getStatus());
+        } else {
+            holder.statusTextView.setVisibility(View.GONE);
+        }
 
-            // Update Firestore with the new volunteer count and data
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("tasks")
-                    .document(task.getId())
-                    .update("volunteerCount", task.getVolunteerCount())
-                    .addOnSuccessListener(aVoid -> {
-                        // Show toast confirmation
-                        Toast.makeText(context, "Signed up for " + task.getName(), Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        // Handle the error
-                        Toast.makeText(context, "Error signing up", Toast.LENGTH_SHORT).show();
-                    });
+        holder.signUpButton.setOnClickListener(v -> {
+            // Navigate to task details fragment
+            AppCompatActivity activity = (AppCompatActivity) context;
+            TaskDetailsFragment detailsFragment = TaskDetailsFragment.newInstance(
+                    task.getId(), task.getName());
+
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, detailsFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
     }
-
 
     @Override
     public int getItemCount() {
@@ -71,7 +70,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
 
-        TextView taskNameTextView, organizerTextView, volunteerCountTextView;
+        TextView taskNameTextView, organizerTextView, volunteerCountTextView, statusTextView;
         Button signUpButton;
 
         public TaskViewHolder(@NonNull View itemView) {
@@ -79,6 +78,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskNameTextView = itemView.findViewById(R.id.textViewTaskName);
             organizerTextView = itemView.findViewById(R.id.textViewTaskOrganizer);
             volunteerCountTextView = itemView.findViewById(R.id.textViewVolunteerCount);
+            statusTextView = itemView.findViewById(R.id.textViewStatus);
             signUpButton = itemView.findViewById(R.id.buttonSignUp);
         }
     }

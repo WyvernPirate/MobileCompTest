@@ -1,11 +1,15 @@
 package com.example.testmobilecomp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Task {
     private String id;
     private String name;
     private String organizer;
     public int volunteerCount;
     private String status;
+    private List<Volunteer> volunteers;
 
     public Task() {
     }
@@ -16,6 +20,7 @@ public class Task {
         this.organizer = organizer;
         this.volunteerCount = volunteerCount;
         this.status = status;
+        this.volunteers = new ArrayList<>();
     }
 
     // Getters and setters
@@ -58,4 +63,19 @@ public class Task {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }
+
+class Volunteer {
+    private String name;
+    private String preferredTime;
+
+    public Volunteer() {}
+
+    public Volunteer(String name, String preferredTime) {
+        this.name = name;
+        this.preferredTime = preferredTime;
+    }
+
+}
+
