@@ -1,0 +1,52 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    android:radius="8dp"> <!-- Rounded corners -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Task Name -->
+        <TextView
+            android:id="@+id/textViewTaskName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Task Name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#3E2723"/> <!-- Darker color for text -->
+
+        <!-- Organizer Name -->
+        <TextView
+            android:id="@+id/textViewTaskOrganizer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Organizer Name"
+            android:textSize="14sp"
+            android:textColor="#757575"/>
+
+        <!-- Volunteer Count -->
+        <TextView
+            android:id="@+id/textViewVolunteerCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Volunteers: 0"
+            android:textSize="14sp"
+            android:textColor="#757575"/>
+
+        <!-- Sign Up Button -->
+        <Button
+            android:id="@+id/buttonSignUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/btn_sign_up"
+            android:textColor="#FFFFFF"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
